@@ -33,35 +33,6 @@
                 }
             }
         }
-        private function getTicket()
-        {
-            foreach($this->html->find('.boxListaAgenda') as $element) {
-                foreach ($element->find('.btn_ingressos') as $key => $pic) {
-                    $x = "http://www.parador12.com.br" . $pic->href;
-                    $this->party[$key]["ticket"] = $x;
-                }
-            }
-        }
-        private function getData()
-        {
-            foreach($this->html->find('.boxListaAgenda') as $element) {
-                foreach ($element->find('.size100') as $key => $pic) {
-                    $one = explode('<p>', $pic);
-                    $k2 = strip_tags($one[2]);
-                    if(!empty($k2)) $this->party[$key]["data"] = $k2;
-                }
-            }
-        }
-        private function getName()
-        {
-            foreach($this->html->find('.boxListaAgenda') as $element) {
-                foreach ($element->find('.size100') as $key => $pic) {
-                    $one = explode('<p>', $pic);
-                    $k1 = strip_tags($one[1]);
-                    $this->party[$key]["name"] = $k1;
-                }
-            }
-        }
         private function getHour()
         {
             foreach($this->html->find('.boxListaAgenda') as $element) {
@@ -76,10 +47,41 @@
                 }
             }
         }
+        private function getTicket()
+        {
+            foreach($this->html->find('.boxListaAgenda') as $element) {
+                foreach ($element->find('.btn_ingressos') as $key => $pic) {
+                    $url = "http://www.parador12.com.br" . $pic->href;
+                    $response = file_get_contents($url, false, $this->context);
+                    $html = str_get_html($response);
+                    foreach ($html->find(".btn_ingressos") as $pic) {
+                        $this->party[$key]["hour"] = $pic->href;
+                    }
+                }
+            }
+        }
+        private function getData()
+        {
+            foreach($this->html->find('.boxListaAgenda') as $element) {
+                foreach ($element->find('.size100') as $key => $pic) {
+                    $one = explode('<p>', $pic);
+                    if(!empty($one[2])) $this->party[$key]["data"] = strip_tags($one[2]);
+                }
+            }
+        }
+        private function getName()
+        {
+            foreach($this->html->find('.boxListaAgenda') as $element) {
+                foreach ($element->find('.size100') as $key => $pic) {
+                    $one = explode('<p>', $pic);
+                    $this->party[$key]["name"] = strtolower(strip_tags($one[1]));
+                }
+            }
+        }
         public function getParty(){
             $this->getImage();
             $this->getName();
-            $this->getData();
+            // $this->getData();
             $this->getDate();
             $this->getHour();
             $this->getTicket();

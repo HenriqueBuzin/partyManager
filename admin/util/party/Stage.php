@@ -15,16 +15,16 @@
         }
         private function getImage()
         {
-            foreach($this->html->find(".cal-wrapper") as $element){
+            foreach($this->html->find(".cal-wrapper") as $key => $element){
                 foreach($element->find('.cal-mais-informacoes a') as $pic){
                     $url = $pic->href;
-                }
-            }
-            $response = file_get_contents($url, false, $this->context);
-            $html = str_get_html($response);
-            foreach($html->find(".interna") as $element){
-                foreach ($element->find('.desc_basica_evento img') as $key => $pic){
-                    $this->party[$key]["img"] = $pic->src;
+                    $response = file_get_contents($url, false, $this->context);
+                    $html = str_get_html($response);
+                    foreach($html->find(".interna") as $element) {
+                        foreach ($element->find('.desc_basica_evento img[src*=evento]') as $pic) {
+                            $this->party[$key]["image"] = $pic->src;
+                        }
+                    }
                 }
             }
         }
@@ -58,7 +58,7 @@
         {
             foreach($this->html->find(".cal-wrapper") as $key => $element){
                 foreach($element->find('.cal-envento') as $pic){
-                    $this->party[$key]["name"] = strip_tags($pic->plaintext);
+                    $this->party[$key]["name"] = strtolower(strip_tags($pic->plaintext));
                 }
             }
         }

@@ -1,6 +1,5 @@
 <?php
-    error_reporting(E_ALL);
-    include_once("../../lib/simple_html_dom.php");
+    include_once("../../lib/SimpleHtmlDomLib.php");
     $files = scandir('party');
     unset($files[0]);
     unset($files[1]);
